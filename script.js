@@ -42,21 +42,21 @@ function saveAndRender() {
 }
 
 function renderPasswords() {
-    const tableBody = document.getElementById('passwordTableBody');
-    tableBody.innerHTML = '';
+    const container = document.getElementById('passwordContainer');
+    container.innerHTML = '';
 
     passwords.forEach((item, index) => {
-        const row = `
-            <tr>
-                <td>${item.site}</td>
-                <td>•••••••• (Click edit to view/change)</td>
-                <td>
+        const card = `
+            <div class="password-card">
+                <div class="card-title">${item.site}</div>
+                <div class="card-pass">••••••••</div>
+                <div class="card-actions">
                     <button class="copy-btn" onclick="copyPassword('${item.pass}')">Copy</button>
                     <button class="edit-btn" onclick="editPassword(${index})">Edit</button>
                     <button class="delete-btn" onclick="deletePassword(${index})">Delete</button>
-                </td>
-            </tr>
+                </div>
+            </div>
         `;
-        tableBody.innerHTML += row;
+        container.innerHTML += card;
     });
 }
