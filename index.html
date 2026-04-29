@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Password Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h2>Password Manager</h2>
+        
+        <div class="form-group">
+            <input type="text" id="siteInput" placeholder="Website Name">
+            <input type="text" id="passInput" placeholder="Password">
+            <button id="addBtn" onclick="addPassword()">Add Password</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Website</th>
+                    <th>Password</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="passwordTableBody">
+                </tbody>
+        </table>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
