@@ -25,4 +25,5 @@ We decided as a group on a password manager that would provide more functionalit
 https://chatgpt.com/share/69e90f18-07f0-83e8-9cbf-d16c9b8abb46
 https://gemini.google.com/share/44f32cb155e9
 
-# 
+# PasswordsAPI
+https://haveibeenpwned.com/API/v3#PwnedPasswords
