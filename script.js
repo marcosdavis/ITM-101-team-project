@@ -60,3 +60,40 @@ function renderPasswords() {
         container.innerHTML += card;
     });
 }
+let currentQuizIndex = 0;
+
+function toggleQuiz() {
+    const quizDiv = document.getElementById('quizContainer');
+    const btn = document.getElementById('startQuizBtn');
+    
+    if (quizDiv.style.display === 'none') {
+        if (passwords.length === 0) {
+            alert("Add some passwords first!");
+            return;
+        }
+        quizDiv.style.display = 'block';
+        btn.innerText = "Close Quiz";
+        nextCard(); // Load first card
+    } else {
+        quizDiv.style.display = 'none';
+        btn.innerText = "Start Flashcard Quiz";
+    }
+}
+
+function flipCard() {
+    document.getElementById('flashcard').classList.toggle('is-flipped');
+}
+
+function nextCard() {
+    // Ensure card is face-front before changing data
+    document.getElementById('flashcard').classList.remove('is-flipped');
+    
+    // Pick a random password
+    currentQuizIndex = Math.floor(Math.random() * passwords.length);
+    
+    // Set a slight timeout so the text changes while the card is face-down/moving
+    setTimeout(() => {
+        document.getElementById('quizSite').innerText = passwords[currentQuizIndex].site;
+        document.getElementById('quizPass').innerText = passwords[currentQuizIndex].pass;
+    }, 150);
+}

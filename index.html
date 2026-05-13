@@ -23,4 +23,26 @@
 
     <script src="script.js"></script>
 </body>
+
+<div class="quiz-section">
+    <button id="startQuizBtn" onclick="toggleQuiz()">Start Flashcard Quiz</button>
+    
+    <div id="quizContainer" class="quiz-container" style="display: none;">
+        <div class="flashcard" id="flashcard" onclick="flipCard()">
+            <div class="flashcard-inner" id="flashcardInner">
+                <div class="flashcard-front">
+                    <p>Website</p>
+                    <h3 id="quizSite">Click Start</h3>
+                </div>
+                <div class="flashcard-back">
+                    <p>Password</p>
+                    <h3 id="quizPass">****</h3>
+                </div>
+            </div>
+        </div>
+        <div class="quiz-controls">
+            <button onclick="nextCard()">Next Card</button>
+        </div>
+    </div>
+</div>
 </html>
