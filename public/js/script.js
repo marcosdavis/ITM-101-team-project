@@ -1,68 +1,94 @@
-let passwords = JSON.parse(localStorage.getItem('myPasswords')) || [];
+// Import your initialized db from config.js
+import { db } from './config.js';
+import { collection, addDoc, deleteDoc, doc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
-// Initial render
-renderPasswords();
+let passwords = [];
+const passwordsRef = collection(db, 'passwords');
 
-function addPassword() {
+// Listen for real-time updates from Firestore
+onSnapshot(passwordsRef, (snapshot) => {
+    passwords = [];
+    snapshot.forEach((doc) => {
+        // Store the Firestore document ID along with the data
+        passwords.push({ id: doc.id, ...doc.data() });
+    });
+    renderPasswords();
+});
+
+window.addPassword = async function() {
     const site = document.getElementById('siteInput');
     const pass = document.getElementById('passInput');
 
     if (site.value && pass.value) {
-        passwords.push({ site: site.value, pass: pass.value });
-        saveAndRender();
-        site.value = '';
-        pass.value = '';
+        try {
+            // Add to Firestore database
+            await addDoc(passwordsRef, { 
+                site: site.value, 
+                pass: pass.value 
+            });
+            site.value = '';
+            pass.value = '';
+        } catch (e) {
+            console.error("Error adding password: ", e);
+            alert("Failed to add password.");
+        }
     } else {
         alert("Please fill in both fields");
     }
-}
+};
 
-function deletePassword(index) {
-    passwords.splice(index, 1);
-    saveAndRender();
-}
+window.deletePassword = async function(id) {
+    try {
+        // Delete from Firestore database using the document ID
+        await deleteDoc(doc(db, 'passwords', id));
+    } catch (e) {
+        console.error("Error deleting password: ", e);
+    }
+};
 
-function copyPassword(text) {
+window.editPassword = async function(id, currentPass) {
+    const newPass = prompt("Enter new password:", currentPass);
+    if (newPass !== null) {
+        try {
+            const docRef = doc(db, 'passwords', id);
+            await updateDoc(docRef, { pass: newPass });
+        } catch (e) {
+            console.error("Error updating password: ", e);
+        }
+    }
+};
+
+window.copyPassword = function(text) {
     navigator.clipboard.writeText(text).then(() => {
         alert("Password copied to clipboard!");
     });
-}
-
-function editPassword(index) {
-    const newPass = prompt("Enter new password:", passwords[index].pass);
-    if (newPass !== null) {
-        passwords[index].pass = newPass;
-        saveAndRender();
-    }
-}
-
-function saveAndRender() {
-    localStorage.setItem('myPasswords', JSON.stringify(passwords));
-    renderPasswords();
-}
+};
 
 function renderPasswords() {
     const container = document.getElementById('passwordContainer');
     container.innerHTML = '';
 
-    passwords.forEach((item, index) => {
+    // Notice we are passing item.id instead of index now
+    passwords.forEach((item) => {
         const card = `
             <div class="password-card">
                 <div class="card-title">${item.site}</div>
                 <div class="card-pass">••••••••</div>
                 <div class="card-actions">
                     <button class="copy-btn" onclick="copyPassword('${item.pass}')">Copy</button>
-                    <button class="edit-btn" onclick="editPassword(${index})">Edit</button>
-                    <button class="delete-btn" onclick="deletePassword(${index})">Delete</button>
+                    <button class="edit-btn" onclick="editPassword('${item.id}', '${item.pass}')">Edit</button>
+                    <button class="delete-btn" onclick="deletePassword('${item.id}')">Delete</button>
                 </div>
             </div>
         `;
         container.innerHTML += card;
     });
 }
+
+// Quiz functionality remains largely the same
 let currentQuizIndex = 0;
 
-function toggleQuiz() {
+window.toggleQuiz = function() {
     const quizDiv = document.getElementById('quizContainer');
     const btn = document.getElementById('startQuizBtn');
     
@@ -73,27 +99,23 @@ function toggleQuiz() {
         }
         quizDiv.style.display = 'block';
         btn.innerText = "Close Quiz";
-        nextCard(); // Load first card
+        window.nextCard(); 
     } else {
         quizDiv.style.display = 'none';
         btn.innerText = "Start Flashcard Quiz";
     }
-}
+};
 
-function flipCard() {
+window.flipCard = function() {
     document.getElementById('flashcard').classList.toggle('is-flipped');
-}
+};
 
-function nextCard() {
-    // Ensure card is face-front before changing data
+window.nextCard = function() {
     document.getElementById('flashcard').classList.remove('is-flipped');
-    
-    // Pick a random password
     currentQuizIndex = Math.floor(Math.random() * passwords.length);
     
-    // Set a slight timeout so the text changes while the card is face-down/moving
     setTimeout(() => {
         document.getElementById('quizSite').innerText = passwords[currentQuizIndex].site;
         document.getElementById('quizPass').innerText = passwords[currentQuizIndex].pass;
     }, 150);
-}
+};
