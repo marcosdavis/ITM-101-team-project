@@ -3,46 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basic Password Manager</title>
-    <link rel="stylesheet" href="style.css">
+    <title>MyPasswords.com - Secure Password Manager</title>
+    <!-- Link to the external CSS file -->
+    <link rel="stylesheet" href="homepage_style.css">
 </head>
 <body>
 
-    <div class="container">
-        <h2>Password Manager</h2>
-        
-        <div class="form-group">
-            <input type="text" id="siteInput" placeholder="Website Name">
-            <input type="text" id="passInput" placeholder="Password">
-            <button id="addBtn" onclick="addPassword()">Add Password</button>
+    <div class="login-container">
+        <div class="brand">
+            <h1>MyPasswords.com</h1>
+            <p>Access your secure vault</p>
         </div>
 
-        <div id="passwordContainer" class="password-grid">
-    </div>
-    </div>
+        <form id="loginForm" action="passwords.html" method="POST">
+            <div class="form-group">
+                <label for="username">Username or Email</label>
+                <input type="text" id="username" name="username" required autocomplete="username" placeholder="Enter your username">
+            </div>
 
-    <script type="module" src="js/script.js"></script>
-</body>
-
-<div class="quiz-section">
-    <button id="startQuizBtn" onclick="toggleQuiz()">Start Flashcard Quiz</button>
-    
-    <div id="quizContainer" class="quiz-container" style="display: none;">
-        <div class="flashcard" id="flashcard" onclick="flipCard()">
-            <div class="flashcard-inner" id="flashcardInner">
-                <div class="flashcard-front">
-                    <p>Website</p>
-                    <h3 id="quizSite">Click Start</h3>
-                </div>
-                <div class="flashcard-back">
-                    <p>Password</p>
-                    <h3 id="quizPass">****</h3>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Enter your password">
+                    <button type="button" id="togglePassword" class="toggle-btn">Show</button>
                 </div>
             </div>
-        </div>
-        <div class="quiz-controls">
-            <button onclick="nextCard()">Next Card</button>
+
+            <button type="submit" class="btn-submit">Sign In</button>
+        </form>
+
+        <div class="footer-links">
+            <a href="#forgot">Forgot Password?</a>
+            <span class="divider">|</span>
+            <a href="#signup">Create an Account</a>
         </div>
     </div>
-</div>
+
+    <!-- Link to the external JavaScript file -->
+    <script src="js/homepage_script.js"></script>
+</body>
 </html>
