@@ -1,42 +1,72 @@
-// Import your initialized db from config.js
-import { db } from './config.js';
-import { collection, addDoc, deleteDoc, doc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+// js/script.js
+import { db, auth } from './config.js'; // Import auth
+import { collection, addDoc, deleteDoc, doc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+// Import auth methods
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 
-let passwords = [];
-const passwordsRef = collection(db, 'passwords');
+let passwords = []; //
+let unsubscribeSnapshot = null; // To safely handle changes
+let currentUser = null;
 
-// Listen for real-time updates from Firestore
-onSnapshot(passwordsRef, (snapshot) => {
-    passwords = [];
-    snapshot.forEach((doc) => {
-        // Store the Firestore document ID along with the data
-        passwords.push({ id: doc.id, ...doc.data() });
-    });
-    renderPasswords();
+// 1. Observe Authentication State Changes
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // User is logged in
+        currentUser = user;
+        console.log("Logged in as:", user.email);
+        
+        // 2. Scrape data specific to this user only
+        const passwordsRef = collection(db, 'passwords');
+        const userPasswordsQuery = query(passwordsRef, where("userId", "==", user.uid));
+
+        // Unsubscribe from previous snapshot if any exists
+        if(unsubscribeSnapshot) unsubscribeSnapshot();
+
+        unsubscribeSnapshot = onSnapshot(userPasswordsQuery, (snapshot) => {
+            passwords = []; //
+            snapshot.forEach((doc) => {
+                passwords.push({ id: doc.id, ...doc.data() }); //
+            });
+            renderPasswords(); //
+        });
+    } else {
+        // User is logged out -> Redirect to Login Page
+        window.location.href = "index.html";
+    }
 });
 
+// Update addPassword to link entries with user's unique identifier
 window.addPassword = async function() {
-    const site = document.getElementById('siteInput');
-    const pass = document.getElementById('passInput');
+    const site = document.getElementById('siteInput'); //
+    const pass = document.getElementById('passInput'); //
 
     if (site.value && pass.value) {
+        if (!currentUser) return alert("You must be logged in to save passwords!");
         try {
-            // Add to Firestore database
-            await addDoc(passwordsRef, { 
-                site: site.value, 
-                pass: pass.value 
+            await addDoc(collection(db, 'passwords'), { 
+                site: site.value, //
+                pass: pass.value, //
+                userId: currentUser.uid // Storing user ID alongside entry
             });
-            site.value = '';
-            pass.value = '';
+            site.value = ''; //
+            pass.value = ''; //
         } catch (e) {
-            console.error("Error adding password: ", e);
-            alert("Failed to add password.");
+            console.error("Error adding password: ", e); //
+            alert("Failed to add password."); //
         }
     } else {
-        alert("Please fill in both fields");
+        alert("Please fill in both fields"); //
     }
 };
 
+// Global Logout function
+window.logoutUser = async function() {
+    try {
+        await signOut(auth);
+    } catch (e) {
+        console.error("Logout Error: ", e);
+    }
+};
 window.deletePassword = async function(id) {
     try {
         // Delete from Firestore database using the document ID
