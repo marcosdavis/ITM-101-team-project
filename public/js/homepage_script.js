@@ -1,5 +1,5 @@
 // js/homepage_script.js
-import { auth } from 'config.js';
+import { auth } from './config.js';
 import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 
 document.addEventListener('DOMContentLoaded', function() {
