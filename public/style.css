@@ -177,6 +177,8 @@ th { background-color: #f8f9fa; }
     0% { opacity: 1; }
     50% { opacity: 0.5; }
     100% { opacity: 1; }
+}
+
 .pass-input-group {
     display: flex;
     gap: 8px;
