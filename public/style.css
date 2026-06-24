@@ -178,6 +178,7 @@ th { background-color: #f8f9fa; }
     50% { opacity: 0.5; }
     100% { opacity: 1; }
 }
+
 .pass-input-group {
     display: flex;
     gap: 8px;
@@ -190,5 +191,5 @@ th { background-color: #f8f9fa; }
 
 #generateBtn {
     white-space: nowrap;
-    background-color: #00eeff;
+    background-color: #ffc107;
 }
