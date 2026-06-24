@@ -162,3 +162,18 @@ th { background-color: #f8f9fa; }
 .quiz-controls {
     margin-top: 15px;
 }
+
+.pass-input-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.pass-input-group input {
+    flex: 1;
+}
+
+#generateBtn {
+    white-space: nowrap;
+    background-color: #00eeff;
+}
