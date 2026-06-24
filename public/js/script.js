@@ -1,6 +1,6 @@
 // js/script.js
 import { db, auth } from './config.js'; // Import auth
-import { collection, addDoc, deleteDoc, doc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { collection, addDoc, deleteDoc, updateDoc, doc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 // Import auth methods
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 
