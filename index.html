@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Password Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h2>Password Manager</h2>
+        
+        <div class="form-group">
+            <input type="text" id="siteInput" placeholder="Website Name">
+            <input type="text" id="passInput" placeholder="Password">
+            <button id="addBtn" onclick="addPassword()">Add Password</button>
+        </div>
+
+        <div id="passwordContainer" class="password-grid">
+    </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+<div class="quiz-section">
+    <button id="startQuizBtn" onclick="toggleQuiz()">Start Flashcard Quiz</button>
+    
+    <div id="quizContainer" class="quiz-container" style="display: none;">
+        <div class="flashcard" id="flashcard" onclick="flipCard()">
+            <div class="flashcard-inner" id="flashcardInner">
+                <div class="flashcard-front">
+                    <p>Website</p>
+                    <h3 id="quizSite">Click Start</h3>
+                </div>
+                <div class="flashcard-back">
+                    <p>Password</p>
+                    <h3 id="quizPass">****</h3>
+                </div>
+            </div>
+        </div>
+        <div class="quiz-controls">
+            <button onclick="nextCard()">Next Card</button>
+        </div>
+    </div>
+</div>
+</html>

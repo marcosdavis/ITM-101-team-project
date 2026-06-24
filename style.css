@@ -162,32 +162,3 @@ th { background-color: #f8f9fa; }
 .quiz-controls {
     margin-top: 15px;
 }
-
-.settings-controls input, 
-.settings-controls select {
-    flex: none !important; 
-    height: 36px;
-}
-
-#reminderAlerts {
-    animation: flashAlert 2.5s infinite;
-}
-
-@keyframes flashAlert {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
-.pass-input-group {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-.pass-input-group input {
-    flex: 1;
-}
-
-#generateBtn {
-    white-space: nowrap;
-    background-color: #00eeff;
-}

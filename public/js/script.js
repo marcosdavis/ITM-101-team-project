@@ -1,6 +1,6 @@
 // js/script.js
 import { db, auth } from './config.js'; // Import auth
-import { collection, addDoc, deleteDoc, doc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { collection, addDoc, deleteDoc, updateDoc, doc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 // Import auth methods
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 
@@ -35,8 +35,21 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
+//Generate a random string as a strong password
+window.generatePassword = function() {
+    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}';
+    const length = 16;
+    const randomValues = crypto.getRandomValues(new Uint32Array(length));
+    const password = Array.from(randomValues)
+        .map(val => charset[val % charset.length])
+        .join('');
+    document.getElementById('passInput').value = password;
+};
+
 // Update addPassword to link entries with user's unique identifier
 window.addPassword = async function() {
+    console.log("addPassword called", currentUser);
+
     const site = document.getElementById('siteInput'); //
     const pass = document.getElementById('passInput'); //
 
