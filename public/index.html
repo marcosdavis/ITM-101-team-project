@@ -9,24 +9,34 @@
 </head>
 <body>
 
-    <div class="login-container" role="main">
+    <main class="login-container">
         <div class="brand">
-            <h1>MyPasswords.com</h1>
+            <h1>Sign In to MyPasswords.com</h1>
             <p>Access your secure vault</p>
         </div>
 
-        <form id="loginForm" action="passwords.html" method="POST" aria-label="Login form">
+        <form id="loginForm" action="passwords.html" method="POST" aria-label="Login form" novalidate>
             <div class="form-group">
                 <label for="username">Username or Email</label>
-                <input type="text" id="username" name="username" required autocomplete="username" placeholder="Enter your username" aria-required="true">
+                <input type="text" id="username" name="username" required
+                    autocomplete="username"
+                    aria-required="true"
+                    aria-describedby="username-error">
+                <span id="username-error" class="error-msg" role="alert" hidden></span>
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
                 <div class="password-input-wrapper">
-                    <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Enter your password" aria-required="true">
-                    <button type="button" id="togglePassword" class="toggle-btn" aria-label="Show password">Show</button>
+                    <input type="password" id="password" name="password" required
+                        autocomplete="current-password"
+                        aria-required="true"
+                        aria-describedby="password-error">
+                    <button type="button" id="togglePassword" class="toggle-btn"
+                        aria-label="Show password"
+                        aria-pressed="false">Show</button>
                 </div>
+                <span id="password-error" class="error-msg" role="alert" hidden></span>
             </div>
 
             <button type="submit" class="btn-submit">Sign In</button>
@@ -34,10 +44,10 @@
 
         <nav class="footer-links" aria-label="Account assistance">
             <a href="#forgot">Forgot Password?</a>
-            <span class="divider">|</span>
+            <span class="divider" aria-hidden="true">|</span>
             <a href="#signup">Create an Account</a>
         </nav>
-    </div>
+    </main>
 
     <script type='module' src="js/homepage_script.js"></script>
 </body>

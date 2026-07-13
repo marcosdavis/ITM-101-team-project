@@ -193,3 +193,37 @@ th { background-color: #f8f9fa; }
     white-space: nowrap;
     background-color: #ffc107;
 }
+
+/* Have I Been Pwned check */
+.pwned-btn {
+    background-color: #6c757d;
+    color: white;
+    width: 100%;
+}
+
+.pwned-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.pwned-result {
+    font-size: 0.85rem;
+    min-height: 1.1em;
+    font-weight: 600;
+}
+
+.pwned-result.checking {
+    color: #856404;
+}
+
+.pwned-result.safe {
+    color: #28a745;
+}
+
+.pwned-result.breached {
+    color: #dc3545;
+}
+
+.pwned-result.error {
+    color: #6c757d;
+}

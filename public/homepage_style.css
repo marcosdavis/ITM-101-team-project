@@ -1,11 +1,13 @@
 :root {
     --primary-color: #2b6cb0;
-    --primary-hover: #2c5282;
+    --primary-hover: #1a4a8a;       /* Darkened for better hover contrast */
     --bg-color: #f7fafc;
     --card-bg: #ffffff;
     --text-main: #2d3748;
-    --text-muted: #718096;
-    --border-color: #e2e8f0;
+    --text-muted: #595f6b;          /* Darkened from #718096 to meet 4.5:1 on white */
+    --border-color: #a0aec0;        /* Darkened from #e2e8f0 — light borders fail WCAG on white */
+    --error-color: #c0392b;
+    --focus-ring: rgba(43, 108, 176, 0.4);
 }
 
 * {
@@ -72,16 +74,38 @@ body {
     font-size: 15px;
     border: 1px solid var(--border-color);
     border-radius: 6px;
+    color: var(--text-main);
+    background-color: #fff;
+
+    /* Never remove outline without replacing it */
     outline: none;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .form-group input:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+    box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
-/* Password wrapper styles to support the show/hide button */
+/* Explicit invalid state — don't rely solely on :focus */
+.form-group input[aria-invalid="true"] {
+    border-color: var(--error-color);
+    box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.2);
+}
+
+/* Error message styling */
+.error-msg {
+    display: block;
+    margin-top: 5px;
+    font-size: 13px;
+    color: var(--error-color);
+    font-weight: 500;
+}
+
+.error-msg[hidden] {
+    display: none;
+}
+
 .password-input-wrapper {
     position: relative;
     display: flex;
@@ -89,7 +113,7 @@ body {
 }
 
 .password-input-wrapper input {
-    padding-right: 60px; /* Make room for the button */
+    padding-right: 60px;
 }
 
 .toggle-btn {
@@ -101,11 +125,25 @@ body {
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
-    padding: 5px;
+    padding: 5px 6px;
+    border-radius: 4px;
+
+    /* Minimum 44×44px touch target (WCAG 2.5.5) */
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .toggle-btn:hover {
     text-decoration: underline;
+}
+
+/* Visible focus for keyboard users on the toggle */
+.toggle-btn:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
 }
 
 .btn-submit {
@@ -120,10 +158,24 @@ body {
     cursor: pointer;
     transition: background-color 0.2s;
     margin-top: 10px;
+
+    /* Touch target */
+    min-height: 44px;
 }
 
 .btn-submit:hover {
     background-color: var(--primary-hover);
+}
+
+/* Visible focus for keyboard users on submit */
+.btn-submit:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 3px;
+}
+
+.btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .footer-links {
@@ -135,10 +187,18 @@ body {
 .footer-links a {
     color: var(--primary-color);
     text-decoration: none;
+    padding: 4px 2px;
+    border-radius: 3px;
 }
 
 .footer-links a:hover {
     text-decoration: underline;
+}
+
+/* Visible focus for keyboard users on footer links */
+.footer-links a:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
 }
 
 .divider {

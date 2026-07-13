@@ -107,6 +107,62 @@ window.copyPassword = function(text) {
     });
 };
 
+// --- Have I Been Pwned: Pwned Passwords check ---
+// Uses the k-anonymity range API: only the first 5 chars of the SHA-1 hash
+// ever leave the browser, so the real password never touches the network.
+async function sha1Hex(str) {
+    const buffer = new TextEncoder().encode(str);
+    const hashBuffer = await crypto.subtle.digest('SHA-1', buffer);
+    return Array.from(new Uint8Array(hashBuffer))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('')
+        .toUpperCase();
+}
+
+window.checkPwned = async function(id) {
+    const item = passwords.find(p => p.id === id);
+    const resultEl = document.getElementById(`pwned-result-${id}`);
+    const btn = document.getElementById(`pwned-btn-${id}`);
+    if (!item || !resultEl) return;
+
+    resultEl.textContent = 'Checking…';
+    resultEl.className = 'pwned-result checking';
+    if (btn) btn.disabled = true;
+
+    try {
+        const hash = await sha1Hex(item.pass);
+        const prefix = hash.slice(0, 5);
+        const suffix = hash.slice(5);
+
+        const res = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`);
+        if (!res.ok) throw new Error(`HIBP responded ${res.status}`);
+        const text = await res.text();
+
+        let count = 0;
+        for (const line of text.split('\n')) {
+            const [lineSuffix, lineCount] = line.split(':');
+            if (lineSuffix.trim() === suffix) {
+                count = parseInt(lineCount, 10);
+                break;
+            }
+        }
+
+        if (count > 0) {
+            resultEl.textContent = `⚠️ Seen in ${count.toLocaleString()} breaches — change this password`;
+            resultEl.className = 'pwned-result breached';
+        } else {
+            resultEl.textContent = '✅ Not found in known breaches';
+            resultEl.className = 'pwned-result safe';
+        }
+    } catch (e) {
+        console.error('Error checking breach status:', e);
+        resultEl.textContent = 'Could not check right now — try again';
+        resultEl.className = 'pwned-result error';
+    } finally {
+        if (btn) btn.disabled = false;
+    }
+};
+
 function renderPasswords() {
     const container = document.getElementById('passwordContainer');
     container.innerHTML = '';
@@ -122,6 +178,10 @@ function renderPasswords() {
                     <button class="edit-btn" onclick="editPassword('${item.id}', '${item.pass}')">Edit</button>
                     <button class="delete-btn" onclick="deletePassword('${item.id}')">Delete</button>
                 </div>
+                <div class="card-actions">
+                    <button id="pwned-btn-${item.id}" class="pwned-btn" onclick="checkPwned('${item.id}')">Check Breach</button>
+                </div>
+                <div id="pwned-result-${item.id}" class="pwned-result"></div>
             </div>
         `;
         container.innerHTML += card;
